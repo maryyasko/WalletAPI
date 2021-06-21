@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace WalletAPI.Models
+﻿namespace WalletAPI.Models
 {
+    /// <summary>
+    /// Информация о валюте.
+    /// </summary>
     public class CurrencyInformation
     {
         public string Currency { get; set; }

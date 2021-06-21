@@ -6,8 +6,14 @@ using WalletAPI.Models;
 
 namespace WalletAPI.Services
 {
+    /// <summary>
+    /// Сервис для работы с счетами пользователя.
+    /// </summary>
     public class AccountService : IAccountService
     {
+        /// <summary>
+        /// Информация о текущем курсе валют.
+        /// </summary>
         private readonly List<CurrencyInformation> CurrenciesInformation;
 
         public AccountService(IRateLoader rateLoader)
@@ -15,14 +21,23 @@ namespace WalletAPI.Services
             CurrenciesInformation = rateLoader.GetRateInformation().ToList();
         }
 
-        private void ValidateCurrency(string currancyName)
+        /// <summary>
+        /// Проверить, что текущая валюта есть в списке валют.
+        /// </summary>
+        /// <param name="currancy">Название валюты.</param>
+        private void ValidateCurrency(string currancy)
         {
-            if (!CurrenciesInformation.Any(x => x.Currency.Equals(currancyName)))
+            if (!CurrenciesInformation.Any(x => x.Currency.Equals(currancy)))
             {
                 throw new CurrencyException();
             }
         }
 
+        /// <summary>
+        /// Проверить, что с текущего счета можно снять заданную сумму.
+        /// </summary>
+        /// <param name="account">Счет.</param>
+        /// <param name="count">Сумма для снятия.</param>
         private void CheckCurrency(Account account, decimal count)
         {
             if (account == null || account.Balance < count)
@@ -31,6 +46,7 @@ namespace WalletAPI.Services
             }
         }
 
+        /// <inheritdoc />
         public void WithdrawMoney(Account account, decimal count)
         {
             CheckCurrency(account, count);
@@ -38,6 +54,7 @@ namespace WalletAPI.Services
             account.Balance -= count;
         }
 
+        /// <inheritdoc />
         public Account CreateAccount(string currancy)
         {
             ValidateCurrency(currancy);
@@ -61,6 +78,7 @@ namespace WalletAPI.Services
             account.Balance += count;
         }
 
+        /// <inheritdoc />
         public void TransferMoney(Account accountFrom, Account accountTo, decimal count)
         {
             WithdrawMoney(accountFrom, count);
@@ -75,7 +93,6 @@ namespace WalletAPI.Services
 
             count = count / rateFrom * rateTo;
 
-            // Добавить перевод в другую валюту.
             DepositMoney(accountTo, count);
         }
     }

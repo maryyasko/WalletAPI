@@ -1,14 +1,14 @@
 using Moq;
-using System;
-using System.Collections.Generic;
 using WalletAPI.CustomException;
 using WalletAPI.Loaders;
-using WalletAPI.Models;
 using WalletAPI.Services;
 using Xunit;
 
 namespace WalletAPITestProject
 {
+    /// <summary>
+    /// “есты сервиса дл€ работы с счетами пользовател€.
+    /// </summary>
     public class AccountServiceTest
     {
         [Fact]

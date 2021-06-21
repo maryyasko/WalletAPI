@@ -3,15 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WalletAPI.CustomException;
-using WalletAPI.Loaders;
 using WalletAPI.Models;
 
 namespace WalletAPI.Services
 {
+    /// <summary>
+    /// Сервис для работы с пользователями.
+    /// </summary>
     public class UserService : IUserService
     {
+        /// <summary>
+        /// Контекст для работы с БД.
+        /// </summary>
         private readonly WalletContext Context;
 
+        /// <summary>
+        /// Сервис для работы с счетами.
+        /// </summary>
         private readonly IAccountService AccountService;
 
         public UserService(WalletContext context, IAccountService accountService)
@@ -20,6 +28,7 @@ namespace WalletAPI.Services
             AccountService = accountService;
         }
 
+        /// <inheritdoc />
         public void CreateUser(string userName)
         {
             var user = new User
@@ -31,6 +40,7 @@ namespace WalletAPI.Services
             Context.SaveChanges();
         }
 
+        /// <inheritdoc />
         public async Task<List<string>> GetUsers()
         {
             var users = await Context.Users.Select(x => x.Name).ToListAsync().ConfigureAwait(false);
@@ -38,6 +48,7 @@ namespace WalletAPI.Services
             return users;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<string>> GetAccountInfo(string userName)
         {
             var user = await Context.Users
@@ -55,6 +66,7 @@ namespace WalletAPI.Services
             return accountInfo;
         }
 
+        /// <inheritdoc />
         public async Task CreateAccount(string userName, string currency)
         {
             var user = await Context.Users.FirstOrDefaultAsync(x => x.Name.Contains(userName)).ConfigureAwait(false);
@@ -64,6 +76,7 @@ namespace WalletAPI.Services
             Context.SaveChanges();
         }
 
+        /// <inheritdoc />
         public async Task DepositMoney(string userName, string currency, decimal count)
         {
             var user = await Context.Users
@@ -83,6 +96,7 @@ namespace WalletAPI.Services
             Context.SaveChanges();
         }
 
+        /// <inheritdoc />
         public async Task WithdrawMoney(string userName, string currency, decimal count)
         {
             var user = await Context.Users
@@ -101,6 +115,7 @@ namespace WalletAPI.Services
             Context.SaveChanges();
         }
 
+        /// <inheritdoc />
         public async Task TransferMoney(string userName, string currencyFrom, string currencyTo, decimal count)
         {
             var user = await Context.Users

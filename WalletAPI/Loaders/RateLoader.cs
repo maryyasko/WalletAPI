@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Serialization;
 using WalletAPI.Models;
 
 namespace WalletAPI.Loaders
 {
+    /// <summary>
+    /// Загрузчик информации о текущем курсе валют.
+    /// </summary>
     public class RateLoader : IRateLoader
     {
         /// <summary>
@@ -17,6 +16,10 @@ namespace WalletAPI.Loaders
         /// </summary>
         private readonly string URL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
 
+        /// <summary>
+        /// Получить данные с API.
+        /// </summary>
+        /// <returns>XML-данные о курсе.</returns>
         private string GetData()
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(URL);
@@ -26,6 +29,7 @@ namespace WalletAPI.Loaders
                 return reader.ReadToEnd();
         }
 
+        /// <inheritdoc />
         public IEnumerable<CurrencyInformation> GetRateInformation()
         {
             var ratesInformation = new List<CurrencyInformation>();
