@@ -19,6 +19,6 @@ namespace WalletAPI.Services
 
         Task WithdrawMoney(string userName, string currency, decimal count);
 
-        Task TransferMoneyAsync(string userName, string currencyFrom, string currencyTo, decimal count);
+        Task TransferMoney(string userName, string currencyFrom, string currencyTo, decimal count);
     }
 }

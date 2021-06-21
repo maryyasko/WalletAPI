@@ -8,18 +8,18 @@ namespace WalletAPI.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly List<CurrencyInformation> RatesInformation;
+        private readonly List<CurrencyInformation> CurrenciesInformation;
 
         public AccountService(IRateLoader rateLoader)
         {
-            RatesInformation = rateLoader.GetRateInformation().ToList();
+            CurrenciesInformation = rateLoader.GetRateInformation().ToList();
         }
 
         private void ValidateCurrency(string currancyName)
         {
-            if (!RatesInformation.Any(x => x.Currency.Equals(currancyName)))
+            if (!CurrenciesInformation.Any(x => x.Currency.Equals(currancyName)))
             {
-                throw new RateException();
+                throw new CurrencyException();
             }
         }
 
@@ -27,7 +27,7 @@ namespace WalletAPI.Services
         {
             if (account == null || account.Balance < count)
             {
-                throw new CurrencyException();
+                throw new BalanceException();
             }
         }
 
@@ -42,16 +42,16 @@ namespace WalletAPI.Services
         {
             ValidateCurrency(currancy);
 
-            var currency = new Account
+            var account = new Account
             {
                 Balance = 0,
                 Currency = currancy,
             };
 
-            return currency;
+            return account;
         }
 
-        public void AddMoney(Account account, decimal count)
+        public void DepositMoney(Account account, decimal count)
         {
             if (account == null)
             {
@@ -70,8 +70,13 @@ namespace WalletAPI.Services
                 throw new AccountException();
             }
 
+            var rateFrom = CurrenciesInformation.FirstOrDefault(x => x.Currency.Equals(accountFrom.Currency)).Rate;
+            var rateTo = CurrenciesInformation.FirstOrDefault(x => x.Currency.Equals(accountTo.Currency)).Rate;
+
+            count = count / rateFrom * rateTo;
+
             // Добавить перевод в другую валюту.
-            AddMoney(accountTo, count);
+            DepositMoney(accountTo, count);
         }
     }
 }

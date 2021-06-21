@@ -78,7 +78,7 @@ namespace WalletAPI.Services
 
             var account = user.Accounts.FirstOrDefault(x => x.Currency.Equals(currency));
 
-            AccountService.AddMoney(account, count);
+            AccountService.DepositMoney(account, count);
 
             Context.SaveChanges();
         }
@@ -101,7 +101,7 @@ namespace WalletAPI.Services
             Context.SaveChanges();
         }
 
-        public async Task TransferMoneyAsync(string userName, string currencyFrom, string currencyTo, decimal count)
+        public async Task TransferMoney(string userName, string currencyFrom, string currencyTo, decimal count)
         {
             var user = await Context.Users
                     .Include(x => x.Accounts)

@@ -13,7 +13,7 @@ using WalletAPI.Services;
 namespace WalletAPI.Controllers
 {
     [ApiController]
-    [Route("api/user")]
+    [Route("api/wallet")]
     public class UserController : Controller
     {
         private readonly IUserService UserService;
@@ -87,7 +87,7 @@ namespace WalletAPI.Controllers
         }
 
         [HttpPost]
-        [Route("AddMoney")]
+        [Route("DepositMoney")]
         [ProducesResponseType(typeof(Task<IActionResult>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DepositMoney(string userName, string currency, decimal count)
@@ -130,7 +130,7 @@ namespace WalletAPI.Controllers
         {
             try
             {
-                await UserService.TransferMoneyAsync(userName, currencyFrom, currencyTo, count).ConfigureAwait(false);
+                await UserService.TransferMoney(userName, currencyFrom, currencyTo, count).ConfigureAwait(false);
 
                 return Ok();
             }

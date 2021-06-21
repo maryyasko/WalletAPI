@@ -12,7 +12,7 @@ namespace WalletAPI.Services
 
         Account CreateAccount(string currancy);
 
-        void AddMoney(Account account, decimal count);
+        void DepositMoney(Account account, decimal count);
 
         void TransferMoney(Account accountFrom, Account accountTo, decimal count);
     }
