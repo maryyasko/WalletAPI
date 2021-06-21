@@ -1,4 +1,4 @@
-﻿namespace WalletAPI.Models
+namespace WalletAPI.Models
 {
     /// <summary>
     /// Информация о валюте.

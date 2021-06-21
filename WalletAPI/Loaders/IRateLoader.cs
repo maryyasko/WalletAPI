@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using WalletAPI.Models;
 
 namespace WalletAPI.Loaders

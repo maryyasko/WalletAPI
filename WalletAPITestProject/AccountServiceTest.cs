@@ -7,7 +7,7 @@ using Xunit;
 namespace WalletAPITestProject
 {
     /// <summary>
-    /// Тесты сервиса для работы с счетами пользователя.
+    /// РўРµСЃС‚С‹ РґР»СЏ СЃРµСЂРІРёСЃР° СЂР°Р±РѕС‚С‹ СЃ СЃС‡РµС‚Р°РјРё.
     /// </summary>
     public class AccountServiceTest
     {
