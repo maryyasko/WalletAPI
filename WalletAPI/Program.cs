@@ -28,7 +28,6 @@ namespace WalletAPI
                 try
                 {
                     var context = services.GetRequiredService<WalletContext>();
-                    // context.Database.EnsureCreated();
                     DBInitializer.Initialize(context);
                 }
                 catch (Exception ex)

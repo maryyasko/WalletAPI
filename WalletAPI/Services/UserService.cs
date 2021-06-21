@@ -8,16 +8,16 @@ using WalletAPI.Models;
 
 namespace WalletAPI.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
-        private readonly WalletContext _context;
+        private readonly WalletContext Context;
 
-        private readonly AccountService AccountService;
+        private readonly IAccountService AccountService;
 
-        public UserService(WalletContext context, IRateLoader rateLoader)
+        public UserService(WalletContext context, IAccountService accountService)
         {
-            _context = context;
-            AccountService = new AccountService(rateLoader);
+            Context = context;
+            AccountService = accountService;
         }
 
         public void CreateUser(string userName)
@@ -27,20 +27,20 @@ namespace WalletAPI.Services
                 Name = userName,
             };
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            Context.Users.Add(user);
+            Context.SaveChanges();
         }
 
         public async Task<List<string>> GetUsers()
         {
-            var users = await _context.Users.Select(x => x.Name).ToListAsync().ConfigureAwait(false);
+            var users = await Context.Users.Select(x => x.Name).ToListAsync().ConfigureAwait(false);
 
             return users;
         }
 
         public async Task<IEnumerable<string>> GetAccountInfo(string userName)
         {
-            var user = await _context.Users
+            var user = await Context.Users
                     .Include(x => x.Accounts)
                     .FirstOrDefaultAsync(x => x.Name.Equals(userName))
                     .ConfigureAwait(false);
@@ -57,16 +57,16 @@ namespace WalletAPI.Services
 
         public async Task CreateAccount(string userName, string currency)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Name.Contains(userName)).ConfigureAwait(false);
+            var user = await Context.Users.FirstOrDefaultAsync(x => x.Name.Contains(userName)).ConfigureAwait(false);
             var account = AccountService.CreateAccount(currency);
 
-            _context.Accounts.Add(account);
-            _context.SaveChanges();
+            Context.Accounts.Add(account);
+            Context.SaveChanges();
         }
 
         public async Task DepositMoney(string userName, string currency, decimal count)
         {
-            var user = await _context.Users
+            var user = await Context.Users
                     .Include(x => x.Accounts)
                     .FirstOrDefaultAsync(x => x.Name.Equals(userName))
                     .ConfigureAwait(false);
@@ -80,12 +80,12 @@ namespace WalletAPI.Services
 
             AccountService.AddMoney(account, count);
 
-            _context.SaveChanges();
+            Context.SaveChanges();
         }
 
         public async Task WithdrawMoney(string userName, string currency, decimal count)
         {
-            var user = await _context.Users
+            var user = await Context.Users
                     .Include(x => x.Accounts)
                     .FirstOrDefaultAsync(x => x.Name.Equals(userName))
                     .ConfigureAwait(false);
@@ -98,12 +98,12 @@ namespace WalletAPI.Services
             var account = user.Accounts.Where(x => x.Equals(currency)).FirstOrDefault();
             AccountService.WithdrawMoney(account, count);
 
-            _context.SaveChanges();
+            Context.SaveChanges();
         }
 
         public async Task TransferMoneyAsync(string userName, string currencyFrom, string currencyTo, decimal count)
         {
-            var user = await _context.Users
+            var user = await Context.Users
                     .Include(x => x.Accounts)
                     .FirstOrDefaultAsync(x => x.Name.Equals(userName))
                     .ConfigureAwait(false);
@@ -118,7 +118,7 @@ namespace WalletAPI.Services
 
             AccountService.TransferMoney(accountFrom, accountTo, count);
 
-            _context.SaveChanges();
+            Context.SaveChanges();
         }
     }
 }

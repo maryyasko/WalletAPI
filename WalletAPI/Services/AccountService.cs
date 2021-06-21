@@ -6,7 +6,7 @@ using WalletAPI.Models;
 
 namespace WalletAPI.Services
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
         private readonly List<CurrencyInformation> RatesInformation;
 

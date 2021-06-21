@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WalletAPI.Loaders;
+using WalletAPI.Services;
 
 namespace WalletAPI
 {
@@ -28,12 +29,12 @@ namespace WalletAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            RateLoader rateLoader = new RateLoader();
-            var r = rateLoader.GetRateInformation();
-
             services.AddEntityFrameworkSqlite().AddDbContext<WalletContext>();
 
-            //services.AddControllersWithViews();
+            services.AddSingleton<IRateLoader, RateLoader>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IUserService, UserService>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

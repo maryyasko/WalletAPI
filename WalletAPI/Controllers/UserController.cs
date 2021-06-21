@@ -16,17 +16,11 @@ namespace WalletAPI.Controllers
     [Route("api/user")]
     public class UserController : Controller
     {
-        private readonly WalletContext _context;
+        private readonly IUserService UserService;
 
-        private AccountService AccountService;
-
-        private UserService UserService;
-
-        public UserController(WalletContext context, IRateLoader rateLoader)
+        public UserController(IUserService userService)
         {
-            _context = context;
-            AccountService = new AccountService(rateLoader);
-            UserService = new UserService(context, rateLoader);
+            UserService = userService;
         }
 
         [HttpPut]
